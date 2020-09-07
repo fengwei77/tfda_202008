@@ -1,0 +1,244 @@
+.content-block {
+  background-image: url("../imgs/game-instructions-prepare-bg_03.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
+}
+
+@media (max-width: 768px) {
+  .content-block {
+    width: 760px;
+    background-image: url("../imgs/game-instructions-bg-fight.png");
+    background-position: center 0px;
+    top: 50px;
+  }
+}
+
+@media (max-width: 414px) {
+  .content-block {
+    width: 408px;
+    background-position: center 0px;
+    top: 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  .content-block {
+    width: 360px;
+    background-position: center 0px;
+  }
+}
+
+.game-board {
+  position: relative;
+  width: 75%;
+  height: 66%;
+  margin: auto;
+  top: 29%;
+  background-image: url("../imgs/game-instructions-text.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+}
+
+@media (max-width: 768px) {
+  .game-board {
+    width: 600px;
+    height: 293px;
+    top: 22%;
+    background-image: url("../imgs/game-instructions-text-m.png");
+    background-size: contain;
+  }
+}
+
+@media (max-width: 414px) {
+  .game-board {
+    width: 350px;
+    height: 180px;
+  }
+}
+
+.game-instructions-txext {
+  position: relative;
+  width: 500px;
+  height: 150px;
+  margin: 0 auto;
+  padding: 15px 25px 10px 10px;
+  top: 43px;
+}
+
+@media (max-width: 768px) {
+  .game-instructions-txext {
+    width: 500px;
+    padding: 35px 25px 10px 10px;
+  }
+}
+
+@media (max-width: 414px) {
+  .game-instructions-txext {
+    width: 310px;
+    padding: 0px 5px 14px 10px;
+  }
+}
+
+.game-instructions-txext p {
+  color: #f7f0f0;
+  font-size: 25px;
+  margin: 0;
+  letter-spacing: 4px;
+  line-height: 28px;
+}
+
+@media (max-width: 414px) {
+  .game-instructions-txext p {
+    letter-spacing: 3px;
+    line-height: 20px;
+  }
+}
+
+.pagination {
+  width: 45%;
+  height: 60px;
+  margin: 0 auto;
+  top: 80px;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    top: 140px;
+    width: 55%;
+  }
+}
+
+@media (max-width: 414px) {
+  .pagination {
+    top: 45px;
+    width: 86%;
+  }
+}
+
+.pagination > a {
+  width: 195px;
+  height: 50px;
+  margin: 0;
+  background-color: #DA9758;
+  font-size: 26px;
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 50px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .pagination > a {
+    width: 135px;
+    font-size: 18px;
+  }
+}
+
+.pagination .look-btn {
+  float: left;
+}
+
+.pagination .start-btn {
+  float: right;
+}
+
+.ok-man-go {
+  position: relative;
+  top: -50px;
+  float: right;
+  width: 230px;
+  height: 223px;
+}
+
+@media (max-width: 768px) {
+  .ok-man-go {
+    top: 255px;
+    left: -30px;
+  }
+}
+
+@media (max-width: 414px) {
+  .ok-man-go {
+    width: 120px;
+    height: auto;
+    top: 60px;
+    left: -8px;
+  }
+}
+
+@media (max-width: 375px) {
+  .ok-man-go {
+    width: 120px;
+    height: auto;
+    top: 25px;
+    left: 5px;
+  }
+}
+
+.ok-man-go img {
+  width: 100%;
+  height: 100%;
+}
+
+.ok-man-jump {
+  -webkit-animation: just-jump 1s ease 0s infinite normal none;
+  animation: just-jump 1s ease 0s infinite normal none;
+}
+
+.look-reel {
+  position: relative;
+  top: -270px;
+  left: 100px;
+  width: 150px;
+  height: 150px;
+  -webkit-transform: rotate(-72deg);
+  -ms-transform: rotate(-72deg);
+  transform: rotate(-72deg);
+}
+
+.look-reel > img {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .look-reel {
+    top: -170px;
+    left: -43px;
+  }
+}
+
+@media (max-width: 414px) {
+  .look-reel {
+    width: 25%;
+    top: -100px;
+    left: 96px;
+  }
+}
+
+.look-reel-swing {
+  -webkit-animation: swing 1s ease 0s infinite normal none;
+  animation: swing 1s ease 0s infinite normal none;
+}
+
+.footer {
+  top: -90px;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    top: -140px;
+  }
+}
+
+@media (max-width: 414px) {
+  .footer {
+    top: -100px;
+    padding-top: 10px;
+    line-height: 10px;
+    height: 50px;
+  }
+}
+
+/*# sourceMappingURL=instructions3.css.map */

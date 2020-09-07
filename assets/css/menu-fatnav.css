@@ -1,0 +1,177 @@
+@media (min-width: 769px) {
+  .hamburger__icon,
+  .hamburger__icon:before,
+  .hamburger__icon:after {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger__icon,
+  .hamburger__icon:before,
+  .hamburger__icon:after {
+    display: block;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger__icon,
+  .hamburger__icon:before,
+  .hamburger__icon:after {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger__icon {
+    margin-top: 33px;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger__icon {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger__icon {
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger__icon, .hamburger__icon:before, .hamburger__icon:after {
+    width: 50px;
+    height: 5px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger__icon, .hamburger__icon:before, .hamburger__icon:after {
+    width: 40px;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger.active .hamburger__icon:after {
+    -webkit-transform: translateY(-15px) rotate(-45deg);
+    -ms-transform: translateY(-15px) rotate(-45deg);
+    transform: translateY(-15px) rotate(-45deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger.active .hamburger__icon:before {
+    -webkit-transform: translateY(30px) rotate(45deg);
+    -ms-transform: translateY(30px) rotate(45deg);
+    transform: translateY(30px) rotate(45deg);
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger.active .hamburger__icon:before {
+    -webkit-transform: translateY(25px) rotate(45deg);
+    -ms-transform: translateY(25px) rotate(45deg);
+    transform: translateY(25px) rotate(45deg);
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger.active .hamburger__icon:before {
+    -webkit-transform: translateY(15px) rotate(45deg);
+    -ms-transform: translateY(15px) rotate(45deg);
+    transform: translateY(15px) rotate(45deg);
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger__icon:before {
+    top: -20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger__icon:before {
+    top: -15px;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger__icon:after {
+    top: 20px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger__icon:after {
+    top: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    position: absolute;
+  }
+}
+
+@media (max-width: 414px) {
+  .hamburger {
+    right: 5px;
+  }
+}
+
+@media (max-width: 375px) {
+  .hamburger {
+    right: -12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fat-nav {
+    height: 65%;
+    top: 80px;
+  }
+}
+
+@media (max-width: 414px) {
+  .fat-nav {
+    height: 45%;
+  }
+}
+
+@media (max-width: 375px) {
+  .fat-nav {
+    height: 40%;
+  }
+}
+
+@media (max-width: 414px) {
+  .fat-nav ul {
+    position: relative;
+    top: -60px;
+  }
+}
+
+@media (max-width: 375px) {
+  .fat-nav ul {
+    position: relative;
+    top: -60px;
+  }
+}
+
+@media (max-width: 414px) {
+  .fat-nav li a {
+    font-size: 40px;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 375px) {
+  .fat-nav li a {
+    font-size: 30px;
+    padding: 12px;
+  }
+}
+
+/*# sourceMappingURL=menu-fatnav.css.map */

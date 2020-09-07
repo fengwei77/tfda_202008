@@ -1,0 +1,196 @@
+.content-block {
+  background-image: url("../imgs/game-instructions-survive-bg.png");
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: contain;
+}
+
+@media (max-width: 768px) {
+  .content-block {
+    width: 760px;
+    background-image: url("../imgs/game-instructions-survive-bg-m.png");
+    background-position: center 0px;
+    top: 50px;
+  }
+}
+
+@media (max-width: 414px) {
+  .content-block {
+    width: 408px;
+    background-position: center 0px;
+    top: 15px;
+  }
+}
+
+@media (max-width: 375px) {
+  .content-block {
+    width: 360px;
+    background-position: center 0px;
+  }
+}
+
+.game-board {
+  position: relative;
+  width: 75%;
+  height: 66%;
+  margin: auto;
+}
+
+.game-board .slide {
+  position: absolute;
+  width: 790px;
+  height: 380px;
+  top: 115px;
+  left: 100px;
+  overflow: hidden;
+}
+
+.game-board .slide > div {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  position: absolute;
+  opacity: 0;
+  -webkit-animation: slide 1s linear 1s normal forwards;
+  animation: slide 1s linear 1s normal forwards;
+}
+
+.game-board .slide > div:nth-child(1) {
+  -webkit-animation-delay: 0.5s;
+  animation-delay: 0.5s;
+}
+
+.game-board .slide > div:nth-child(2) {
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}
+
+.game-board .slide > div:nth-child(3) {
+  -webkit-animation-delay: 1.5s;
+  animation-delay: 1.5s;
+}
+
+.game-board .slide > div:nth-child(4) {
+  -webkit-animation-delay: 2s;
+  animation-delay: 2s;
+}
+
+.game-board .slide .reel-slide1 {
+  background-image: url("../imgs/game-instructions-secret-1.png");
+}
+
+.game-board .slide .reel-slide2 {
+  background-image: url("../imgs/game-instructions-secret-2.png");
+}
+
+.game-board .slide .reel-slide3 {
+  background-image: url("../imgs/game-instructions-secret-3.png");
+}
+
+.game-board .slide .reel-slide4 {
+  background-image: url("../imgs/game-instructions-secret-end.png");
+}
+
+@media (max-width: 768px) {
+  .game-board .slide {
+    width: 600px;
+    height: 289px;
+    top: 27%;
+    left: -4%;
+  }
+}
+
+@media (max-width: 414px) {
+  .game-board .slide {
+    width: 400px;
+    height: 192px;
+    top: 30%;
+    left: -16%;
+  }
+}
+
+@media (max-width: 375px) {
+  .game-board .slide {
+    width: 330px;
+    height: 158px;
+    top: 30%;
+    left: -12%;
+  }
+}
+
+.pagination {
+  position: absolute;
+  width: 25%;
+  height: 50px;
+  top: 100%;
+  left: 37%;
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    top: 66%;
+    left: 29%;
+    width: 40%;
+  }
+}
+
+@media (max-width: 414px) {
+  .pagination {
+    top: 80%;
+    left: 23%;
+    width: 55%;
+  }
+}
+
+@media (max-width: 375px) {
+  .pagination {
+    top: 80%;
+    left: 23%;
+    width: 55%;
+  }
+}
+
+.pagination .previous-page-arrow {
+  float: left;
+  width: 50px;
+  height: 50px;
+  margin: 0;
+}
+
+.pagination .previous-page-arrow img {
+  width: 100%;
+  height: 100%;
+}
+
+.pagination .next-page-arrow {
+  float: right;
+  width: 50px;
+  height: 50px;
+  margin: 0;
+}
+
+.pagination .next-page-arrow img {
+  width: 100%;
+  height: 100%;
+}
+
+.footer {
+  top: -90px;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    top: -140px;
+  }
+}
+
+@media (max-width: 414px) {
+  .footer {
+    top: -100px;
+    padding-top: 10px;
+    line-height: 10px;
+    height: 50px;
+  }
+}
+
+/*# sourceMappingURL=instructions2.css.map */
