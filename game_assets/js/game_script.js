@@ -30,12 +30,14 @@ $('.header').css({'width': WIDTH * ratio});
 $('.footer').css({'width': WIDTH * ratio});
 for(let i = 1;i<=5;i++) {
     $('.q'+i +'_a').css({
-        'width': parseInt($('.q'+i +'_a').css('width').replace('px', '')) * ratio*1.5 + 'px',
-        'left': parseInt($('.q'+i +'_a').css('left').replace('px', ''))  * ratio*2  + 'px'
+       'width': parseInt($('.q'+i +'_a').css('width').replace('px', '')) * ratio*2.3+ 'px',
+    //  'left': parseInt($('.q'+i +'_a').css('left').replace('%', ''))  * ratio  + '%',
+   //     'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*1.5  + 'px'
     });
     $('.q'+i +'_b').css({
-        'width': parseInt($('.q'+i +'_b').css('width').replace('px', '')) * ratio*1.5  + 'px',
-        'left': parseInt($('.q'+i +'_b').css('left').replace('px', ''))* ratio*2  + 'px'
+       'width': parseInt($('.q'+i +'_b').css('width').replace('px', '')) * ratio *2.3  + 'px',
+    //  'left': parseInt($('.q'+i +'_b').css('left').replace('%', ''))* ratio  + '%',
+     //   'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*3  + 'px'
     });
 }
  // $('.game-board').css({'height': HEIGHT*ratio});
@@ -169,8 +171,10 @@ let run_create_enemy = 0;
 let enemy_no = 0;
 let die_count = 0;
 let maskGraphic = new PIXI.Graphics();
-let init_distance = 50 / ratio;
-
+let init_distance = 5;
+if (md.mobile() != null) {
+    init_distance = 50 / ratio;
+}
 function onAssetsLoaded(loaderInstance, res) {
     graphics.beginFill(0x213e29);
     graphics.drawRect(0, 0, nvw, nvh);
@@ -203,8 +207,12 @@ function onAssetsLoaded(loaderInstance, res) {
         player_container.removeChild(computer_operating);
         player_container.removeChild(mobile_operating);
         player_sprite.textures = textureArray.player_action;
-        player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
 
+        }else {
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+        }
         app.renderer.render(app.stage);
     }
     // computer_operating.on('pointerdown', function () {
@@ -223,8 +231,12 @@ function onAssetsLoaded(loaderInstance, res) {
         player_container.removeChild(computer_operating);
         player_container.removeChild(mobile_operating);
         player_sprite.textures = textureArray.player_action;
-        player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
-        app.renderer.render(app.stage);
+        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
+
+        }else {
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+        }        app.renderer.render(app.stage);
     }
     if (md.mobile() != null) {
         window.scrollTo(0, 200);
@@ -388,7 +400,7 @@ let kill_boss = false;
 
 app.ticker.add((deltaMS) => {
 
-    window.addEventListener("resize", resize(app));
+    // window.addEventListener("resize", resize(app));
     window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
         resize(app);
     }, false);
@@ -423,7 +435,12 @@ app.ticker.add((deltaMS) => {
     if (push_start) {
         player_sprite.textures = textureArray.player_action;
         player_sprite.loop = true;
-        player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
+
+        }else {
+            player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+        }
         app.renderer.render(app.stage);
         app.stop();
         player_sprite_action_go.position.set(player_sprite.position.x + player_sprite.width / 1.2, player_sprite.height);
@@ -565,7 +582,7 @@ app.ticker.add((deltaMS) => {
         if (ans_done[0]) {
             ans_done[0] = false;
             $('.ans_1').click(function () {
-                if ($(this).attr('val') === "A") {
+                if ($(this).attr('val') === "B") {
                     console.log("yes");
                     gsap.to(enemy_sprite[2], {
                         pixi: {scale: 0},
@@ -761,7 +778,7 @@ app.ticker.add((deltaMS) => {
         if (hitTestRectangle(aBox, bBox)) {
             // console.log('die');
             die_count++;
-            if (die_count > 7) {
+            if (die_count > 99997) {
                 // console.log('die');
                 if (player_container.position.y >= nvh) {
                     player_container.position.y = player_container.position.y + deltaMS * 20;
