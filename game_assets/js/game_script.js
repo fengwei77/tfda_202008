@@ -1,26 +1,16 @@
 const show_debug = true
 gsap.registerPlugin(gsap, MotionPathPlugin, EaselPlugin, PixiPlugin, TweenMax, TimelineMax, Power4, Power3, Power2, Power1, Power0);
 
-let w = window,
-    d = document,
-    e = d.documentElement,
-    g = d.getElementsByTagName('body')[0],
-    x = document.getElementById("gameContainer").offsetWidth,
-    y = document.getElementById("gameContainer").offsetHeight;
 console.log('g' + g.offsetWidth);
 console.log(g.offsetWidth);
 // y =600 * x/1366;
 console.log('x' + x);
 console.log('y' + y);
-let ratio = 1;
 x = 1366;
 y = 600;
-if (g.offsetWidth < 1366) {
-    ratio = g.offsetWidth / 1366;
-}
+
 let win_init_width = w.innerWidth;
 let win_init_height = w.innerHeight;
-let md = new MobileDetect(window.navigator.userAgent);
 let WIDTH = x;
 let HEIGHT = y * WIDTH / 1366;
 // console.log(WIDTH);
@@ -28,19 +18,35 @@ let HEIGHT = y * WIDTH / 1366;
 $('#gameContainer').css({'width': WIDTH * ratio, 'height': HEIGHT * ratio,});
 $('.header').css({'width': WIDTH * ratio});
 $('.footer').css({'width': WIDTH * ratio});
-for(let i = 1;i<=5;i++) {
-    $('.q'+i +'_a').css({
-       'width': parseInt($('.q'+i +'_a').css('width').replace('px', '')) * ratio*2.3+ 'px',
-    //  'left': parseInt($('.q'+i +'_a').css('left').replace('%', ''))  * ratio  + '%',
-   //     'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*1.5  + 'px'
+for (let i = 1; i <= 5; i++) {
+    $('.q' + i + '_a').css({
+        // 'width': parseInt($('.q'+i +'_a').css('width').replace('px', '')) * ratio*2.3+ 'px',
+        //  'left': parseInt($('.q'+i +'_a').css('left').replace('%', ''))  * ratio  + '%',
+        //     'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*1.5  + 'px'
+        'position': 'absolute',
+        'display': 'block',
+        'background-color': '#2ecc71',
+        'opacity': '0',
+        'width': '40%',
+        'height': '70%',
+        'top': '50%',
+        'left': '10%'
     });
-    $('.q'+i +'_b').css({
-       'width': parseInt($('.q'+i +'_b').css('width').replace('px', '')) * ratio *2.3  + 'px',
-    //  'left': parseInt($('.q'+i +'_b').css('left').replace('%', ''))* ratio  + '%',
-     //   'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*3  + 'px'
+    $('.q' + i + '_b').css({
+        // 'width': parseInt($('.q'+i +'_b').css('width').replace('px', '')) * ratio *2.3  + 'px',
+        //  'left': parseInt($('.q'+i +'_b').css('left').replace('%', ''))* ratio  + '%',
+        //   'top': parseInt($('.q'+i +'_a').css('top').replace('px', ''))  * ratio*3  + 'px'
+        'position': 'absolute',
+        'display': 'block',
+        'background-color': '#cc2e5b',
+        'opacity': '0',
+        'width': '40%',
+        'height': '70%',
+        'top': '50%',
+        'left': '50%'
     });
 }
- // $('.game-board').css({'height': HEIGHT*ratio});
+// $('.game-board').css({'height': HEIGHT*ratio});
 let gameScene, state, block_wall;  //基礎設定
 let unmute = true;
 let type = "WebGL";
@@ -65,7 +71,7 @@ let player_action = true;
 //遊戲場景
 
 const manifest = {
-    // BGM_1: 'sounds/play.mp3',
+    BGM_1: './game_assets/sounds/play.mp3',
     // BGM_2: 'sounds/clear.mp3',
     // BGM_3: 'sounds/mechanical.mp3',
     computer_operating: "./game_assets/images/computer_operating.png",
@@ -76,6 +82,7 @@ const manifest = {
     player_run_4: "./game_assets/images/ok_run_4.png",
     player_cry: "./game_assets/images/ok_cry.png",
     player_action_1: "./game_assets/images/ok_action_1.png",
+    game_start: "./game_assets/images/game_start.png",
     player_wish: "./game_assets/images/ok_wish.png",
     player_jump: "./game_assets/images/ok_jump.png",
     shiba_bring: "./game_assets/images/shiba_bring.png",
@@ -114,6 +121,7 @@ const Container = PIXI.Container;
 const graphics = new PIXI.Graphics();
 
 
+const bar1 = new ldBar(".ldBar");
 // app.stop();
 
 app.stage.interactive = true;
@@ -124,7 +132,23 @@ $('#gameContainer').append(app.view);
 for (let name in manifest) {
     loader.add(name, manifest[name]);
 }
+loader.on('progress', function (loader, res) {
+    console.log('progress:' + loader.progress + '%')
+})
+loader.on('complete', function (loader, res) {
+    console.log('complete')
+});
 loader.load(onAssetsLoaded);
+
+loader.onProgress.add((event) => {
+    console.log("onProgress: ", event);
+    bar1.set((loader.progress | 0));
+    console.log("progress: " + (loader.progress | 0) + "%");
+    if (loader.progress >= 99) {
+        $('#loadingPage').remove();
+    }
+});
+
 
 const vpw = document.getElementById("game_box").offsetWidth;  // Width of the viewport
 const vph = document.getElementById("game_box").offsetHeight; // Height of the viewport
@@ -148,9 +172,9 @@ console.log(nvh);
 
 let bg_container = new Container;
 let player_container = new Container;
-let sound = null;
+let bg_sound = null;
 let bg_sprite, fg_sprite, player_sprite,
-    player_sprite_msg, player_sprite_action_go,
+    player_sprite_msg, player_sprite_action_go, player_sprite_game_start,
     player_sprite_final, player_sprite_back_msg, player_sprite_back_btn,
     computer_operating, mobile_operating,
     mobile_button_operating;
@@ -171,11 +195,27 @@ let run_create_enemy = 0;
 let enemy_no = 0;
 let die_count = 0;
 let maskGraphic = new PIXI.Graphics();
-let init_distance = 5;
-if (md.mobile() != null) {
-    init_distance = 50 / ratio;
-}
+//靜音
+$('#sound').click(function () {
+    bg_sound.volume = 0;
+    $('#sound').hide();
+    $('#mute').show();
+    unmute = false;
+});
+$('#mute').click(function () {
+    bg_sound.volume = .5;
+    $('#mute').hide();
+    $('#sound').show();
+    unmute = true;
+});
+
+// PIXI.sound.togglePauseAll();
+
 function onAssetsLoaded(loaderInstance, res) {
+
+    bg_sound = res.BGM_1.sound;
+    bg_sound.volume = 0.5;
+    // bg_sound.play();
     graphics.beginFill(0x213e29);
     graphics.drawRect(0, 0, nvw, nvh);
     graphics.alpha = 0.8;
@@ -200,17 +240,18 @@ function onAssetsLoaded(loaderInstance, res) {
     mobile_operating = new Sprite(loader.resources["mobile_operating"].texture);
     computer_operating.position.set(nvw / 2 - computer_operating.width / 2, nvh / 5);
     mobile_operating.position.set(nvw / 2 - mobile_operating.width / 2, nvh / 5);
-    computer_operating.alpha = 1;
+
     computer_operating.interactive = true;
     computer_operating.pointerdown = function () {
         graphics.alpha = 0;
+        // player_container.removeChild(player_sprite_game_start);
         player_container.removeChild(computer_operating);
         player_container.removeChild(mobile_operating);
         player_sprite.textures = textureArray.player_action;
-        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+        if (md.mobile() && g.offsetWidth > g.offsetHeight) {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
 
-        }else {
+        } else {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
         }
         app.renderer.render(app.stage);
@@ -224,24 +265,28 @@ function onAssetsLoaded(loaderInstance, res) {
     //
     //     app.renderer.render(app.stage);
     // });
-    mobile_operating.alpha = 1;
     mobile_operating.interactive = true;
     mobile_operating.pointerdown = function () {
         graphics.alpha = 0;
+        // player_container.removeChild(player_sprite_game_start);
         player_container.removeChild(computer_operating);
         player_container.removeChild(mobile_operating);
         player_sprite.textures = textureArray.player_action;
-        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+        if (md.mobile() && g.offsetWidth > g.offsetHeight) {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
 
-        }else {
+        } else {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
-        }        app.renderer.render(app.stage);
+        }
+        app.renderer.render(app.stage);
     }
+
+    computer_operating.alpha = 1;
+    mobile_operating.alpha = 0;
     if (md.mobile() != null) {
         window.scrollTo(0, 200);
         computer_operating.alpha = 0;
-        mobile_button_operating.alpha = 1;
+        mobile_operating.alpha = 1;
     }
 
     player_container.addChild(computer_operating);
@@ -250,6 +295,7 @@ function onAssetsLoaded(loaderInstance, res) {
     textureArray['player_action'] = [
         loader.resources["player_action_1"].texture,
     ];
+    textureArray['game_start'] = new Sprite(loader.resources["game_start"].texture);
     textureArray['run'] = [
         loader.resources["player_run_1"].texture,
         loader.resources["player_run_2"].texture,
@@ -313,6 +359,10 @@ function onAssetsLoaded(loaderInstance, res) {
         new Sprite(loader.resources["obstacle_7"].texture),
         new Sprite(loader.resources["devil"].texture), //11
     ];
+
+    textureArray['bose_lose'] = loader.resources["devil_lose"].texture;
+    // player_container.addChild(textureArray['bose_lose']);
+
     for (let i = 0; i < textureArray['enemies'].length; i++) {
 
         enemy_sprite[i] = textureArray['enemies'][i];
@@ -334,9 +384,14 @@ function onAssetsLoaded(loaderInstance, res) {
         player_sprite_back_btn.alpha = 0;
         app.start();
     }
+
     player_sprite_action_go = textureArray.action_go;
+    player_sprite_action_go.alpha = 0;
+    player_sprite_game_start = textureArray.game_start;
+    player_sprite_game_start.position.set(nvw / 2 - player_sprite_game_start.width / 2, nvh /2);
     player_sprite_final = textureArray.final;
     player_container.addChild(player_sprite_final);
+    player_container.addChild(player_sprite_game_start);
     player_container.addChild(player_sprite_action_go);
     player_container.addChild(player_sprite);
     player_container.addChild(player_sprite_back_msg);
@@ -370,6 +425,7 @@ function onAssetsLoaded(loaderInstance, res) {
         location.reload();
     }
     graphics.zIndex = 15;
+    player_sprite_game_start.zIndex = 19;
     mobile_operating.zIndex = 20;
     computer_operating.zIndex = 30;
     player_sprite.zIndex = 10;
@@ -399,11 +455,18 @@ let count = 0;
 let kill_boss = false;
 
 app.ticker.add((deltaMS) => {
-
-    // window.addEventListener("resize", resize(app));
-    window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
-        resize(app);
-    }, false);
+    if(player_sprite_action_go.alpha == 1){
+        setTimeout(() => {
+            player_sprite_action_go.alpha = 0;
+        }, 1200)
+    }
+    window.addEventListener("resize", resize(app));
+    // window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
+    //     resize(app);
+    // }, false);
+    $(window).on("orientationchange", function () {
+        resize(app)
+    });
     // console.log('nvh' + nvh);
     if (kill_boss) {
         count += 0.1;
@@ -429,25 +492,28 @@ app.ticker.add((deltaMS) => {
     player_sprite_final.interactive = true;
     player_sprite_final.pointerdown = function () {
         player_container.removeChild(player_sprite_action_go);
+        player_container.removeChild(player_sprite_game_start);
+
     }
     player_sprite_final.alpha = 0;
-
     if (push_start) {
         player_sprite.textures = textureArray.player_action;
         player_sprite.loop = true;
-        if(md.mobile() && g.offsetWidth > g.offsetHeight ){
+        if (md.mobile() && g.offsetWidth > g.offsetHeight) {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
 
-        }else {
+        } else {
             player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
         }
         app.renderer.render(app.stage);
         app.stop();
         player_sprite_action_go.position.set(player_sprite.position.x + player_sprite.width / 1.2, player_sprite.height);
-        player_sprite_action_go.interactive = true;
-        player_sprite_action_go.pointerdown = function () {
+        player_sprite_game_start.interactive = true;
+        player_sprite_game_start.pointerdown = function () {
             // console.log('asd');
-            player_container.removeChild(player_sprite_action_go);
+            player_sprite_game_start.alpha = 0;
+            player_container.removeChild(player_sprite_game_start);
+            player_sprite_action_go.alpha = 1;
             // app.renderer.render(app.stage);
             player_sprite.textures = textureArray.run;
             player_sprite.animationSpeed = 0.25;
@@ -456,6 +522,8 @@ app.ticker.add((deltaMS) => {
             app.start();
             push_start = false;
         }
+
+
     }
     bg_sprite.tilePosition.x = (bg_sprite.tilePosition.x - deltaMS * bg_speed) % bg_sprite.texture.width;
     setTimeout(() => {
@@ -534,8 +602,12 @@ app.ticker.add((deltaMS) => {
             } else {
                 player_sprite_final.alpha = 1;
                 player_sprite.textures = textureArray.player_action;
-                player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+                if (md.mobile() && g.offsetWidth > g.offsetHeight) {
+                    player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance * ratio;
 
+                } else {
+                    player_sprite.position.y = (y - player_sprite.getBounds().height * ratio) * ratio + init_distance;
+                }
                 if (textureArray['shiba_cry'].position.y < -30) {
                     textureArray['shiba_cry'].position.y += deltaMS * 16;
                     textureArray['shiba_cry'].angle = -10;
@@ -561,7 +633,7 @@ app.ticker.add((deltaMS) => {
                         textureArray['shiba_cry'].rotation = 0.0;
                     }
 
-                    console.log(textureArray['shiba_cry'].rotation);
+                    // console.log(textureArray['shiba_cry'].rotation);
 
 
                 }
@@ -583,21 +655,36 @@ app.ticker.add((deltaMS) => {
             ans_done[0] = false;
             $('.ans_1').click(function () {
                 if ($(this).attr('val') === "B") {
+                    app.start();
                     console.log("yes");
                     gsap.to(enemy_sprite[2], {
-                        pixi: {scale: 0},
-                        duration: 0,
+                        pixi: {scale: 1},
+                        duration: 2,
                         repeat: 1,
+                        motionPath: {
+                            path: [{x:100, y:50}, {x:200, y:0}, {x:300, y:100}]
+                        },
+                        ease: "power3.in",
                         onComplete: function () {
-                            $('.q1').fadeOut(function () {
-                                question_index.splice(question_index.indexOf(2), 1);
-                                app.start();
-                                $('.q1').remove();
-                            });
                         },
                         onUpdate: function () {
                         }
                     });
+                    // gsap.to(enemy_sprite[2], {
+                    //     pixi: {scale: 1},
+                    //     duration: 1,
+                    //     motionPath: [{x:0, y:0}, {x:8888, y:500}],
+                    //     repeat: 1,
+                    //     onComplete: function () {
+                    //         $('.q1').fadeOut(function () {
+                    //             question_index.splice(question_index.indexOf(2), 1);
+                    //             app.start();
+                    //             $('.q1').remove();
+                    //         });
+                    //     },
+                    //     onUpdate: function () {
+                    //     }
+                    // });
                 } else {
                     $('.q1').hide();
                     graphics.alpha = 0.4;
@@ -737,8 +824,12 @@ app.ticker.add((deltaMS) => {
             $('.ans_5').click(function () {
                 if ($(this).attr('val') === "A") {
                     console.log("yes");
+
+
+                    enemy_sprite[11].texture = textureArray.bose_lose;
+
                     gsap.to(enemy_sprite[11], {
-                        pixi: {scale: 0},
+                        pixi: {scale: 1},
                         duration: 0,
                         repeat: 1,
                         onComplete: function () {
@@ -747,8 +838,8 @@ app.ticker.add((deltaMS) => {
                                 kill_boss = true;
                                 app.start();
                                 setTimeout(function (){
-                                    location.href = 'form.html';
-                                },5000);
+                                    location.href = 'contact.html';
+                                },2500);
                             });
                         },
                         onUpdate: function () {
@@ -778,7 +869,7 @@ app.ticker.add((deltaMS) => {
         if (hitTestRectangle(aBox, bBox)) {
             // console.log('die');
             die_count++;
-            if (die_count > 99997) {
+            if (die_count > 7777) {
                 // console.log('die');
                 if (player_container.position.y >= nvh) {
                     player_container.position.y = player_container.position.y + deltaMS * 20;
