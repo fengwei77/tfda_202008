@@ -194,6 +194,7 @@ let operating_container = new Container;
 let run_create_enemy = 0;
 let enemy_no = 0;
 let die_count = 0;
+let die_count_max = 7;
 let maskGraphic = new PIXI.Graphics();
 //靜音
 $('#sound').click(function () {
@@ -365,10 +366,17 @@ function onAssetsLoaded(loaderInstance, res) {
 
     for (let i = 0; i < textureArray['enemies'].length; i++) {
 
-        enemy_sprite[i] = textureArray['enemies'][i];
-        enemy_sprite[i].position.set(WIDTH + 300, nvh - enemy_sprite[i].height + 10);
-        enemy_sprite[i].anchor.set(0);
-        player_container.addChild(enemy_sprite[i]);
+        if (i == textureArray['enemies'].length) {
+            enemy_sprite[i] = textureArray['enemies'][i];
+            enemy_sprite[i].position.set(WIDTH + 300, nvh - enemy_sprite[i].height + 80);
+            enemy_sprite[i].anchor.set(0.5, 0.5);
+            player_container.addChild(enemy_sprite[i]);
+        } else {
+            enemy_sprite[i] = textureArray['enemies'][i];
+            enemy_sprite[i].position.set(WIDTH + 300, nvh - enemy_sprite[i].height + 10);
+            enemy_sprite[i].anchor.set(0);
+            player_container.addChild(enemy_sprite[i]);
+        }
     }
 
     player_sprite_msg = textureArray.try_again;
@@ -388,7 +396,7 @@ function onAssetsLoaded(loaderInstance, res) {
     player_sprite_action_go = textureArray.action_go;
     player_sprite_action_go.alpha = 0;
     player_sprite_game_start = textureArray.game_start;
-    player_sprite_game_start.position.set(nvw / 2 - player_sprite_game_start.width / 2, nvh /2);
+    player_sprite_game_start.position.set(nvw / 2 - player_sprite_game_start.width / 2, nvh / 2);
     player_sprite_final = textureArray.final;
     player_container.addChild(player_sprite_final);
     player_container.addChild(player_sprite_game_start);
@@ -440,12 +448,17 @@ function onAssetsLoaded(loaderInstance, res) {
     app.start();
 }
 
+let timer = 0;
 let time = 0;
 let game_stop = true;
 let enemy_generate_speed = 6
 let move_x = 0;
+let out_x = 0;
+let out_y = 0;
 let question_index = [2, 4, 7, 9, 11];
+let enemy_move_x = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let ans_done = [true, true, true, true, true];
+let enemy_out = [false, false, false, false, false];
 let push_start = true;
 let pendulum = 0.01;
 let rotationWay = false;
@@ -455,10 +468,9 @@ let count = 0;
 let kill_boss = false;
 
 app.ticker.add((deltaMS) => {
-    if(player_sprite_action_go.alpha == 1){
-        setTimeout(() => {
-            player_sprite_action_go.alpha = 0;
-        }, 1200)
+    timer += deltaMS;
+    if (player_sprite_action_go.alpha > 0 && timer > 35) {
+        player_sprite_action_go.alpha -= deltaMS * 0.02;
     }
     window.addEventListener("resize", resize(app));
     // window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
@@ -579,8 +591,7 @@ app.ticker.add((deltaMS) => {
 
         // app.stop();
     }
-    move_x += 0.02;
-
+    enemy_move_x[enemy_no] += 0.02;
     if (enemy_no < textureArray['enemies'].length) {
         let aBox = enemy_sprite[enemy_no].getBounds();
         let bBox = player_sprite.getBounds();
@@ -588,6 +599,59 @@ app.ticker.add((deltaMS) => {
         // console.log( enemy_sprite[enemy_no].x );
         // console.log( player_sprite.x );
         // enemy_container.width = 139;
+
+        if (enemy_out[0]) {
+            enemy_move_x[2] = 0;
+            out_x += 0.1;
+            out_y += 0.1;
+            enemy_sprite[2].anchor.set(0.5, 0.5);
+            enemy_sprite[2].position.x = enemy_sprite[2].position.x + 12 * out_x;
+            enemy_sprite[2].position.y = enemy_sprite[2].position.y - 12 * out_y;
+            enemy_sprite[2].angle = enemy_sprite[2].angle + out_x * 30;
+        }
+        if (enemy_out[1]) {
+            enemy_move_x[4] = 0;
+            out_x += 0.1;
+            out_y += 0.1;
+            enemy_sprite[4].anchor.set(0.5, 0.5);
+            enemy_sprite[4].position.x = enemy_sprite[4].position.x + 12 * out_x;
+            enemy_sprite[4].position.y = enemy_sprite[4].position.y - 12 * out_y;
+            enemy_sprite[4].angle = enemy_sprite[4].angle + out_x * 30;
+        }
+        if (enemy_out[2]) {
+            enemy_move_x[7] = 0;
+            out_x += 0.1;
+            out_y += 0.1;
+            enemy_sprite[7].anchor.set(0.5, 0.5);
+            enemy_sprite[7].position.x = enemy_sprite[7].position.x + 12 * out_x;
+            enemy_sprite[7].position.y = enemy_sprite[7].position.y - 12 * out_y;
+            enemy_sprite[7].angle = enemy_sprite[7].angle + out_x * 30;
+        }
+        if (enemy_out[3]) {
+            enemy_move_x[9] = 0;
+            out_x += 0.1;
+            out_y += 0.1;
+            enemy_sprite[9].anchor.set(0.5, 0.5);
+            enemy_sprite[9].position.x = enemy_sprite[9].position.x + 12 * out_x;
+            enemy_sprite[9].position.y = enemy_sprite[9].position.y - 12 * out_y;
+            enemy_sprite[9].angle = enemy_sprite[9].angle + out_x * 30;
+        }
+        if (enemy_out[4]) {
+
+            // enemy_sprite[11].position.y = (y - enemy_sprite[11].getBounds().height * ratio);
+
+            enemy_sprite[11].anchor.set(0.5, 0.5);
+            enemy_sprite[11].texture = textureArray.bose_lose;
+            enemy_move_x[11] = 0;
+            out_x += 0.02;
+
+            enemy_sprite[11].position.x = enemy_sprite[11].position.x + 1 * out_x;
+            enemy_sprite[11].position.y = nvh - enemy_sprite[11].height + 80
+            // enemy_sprite[11].position.y = enemy_sprite[11].position.y - 15 * out_y;
+            enemy_sprite[11].angle = enemy_sprite[11].angle + out_x * 0.9;
+            console.log('out_x' + out_x);
+        }
+
 
         if (enemy_no == 11) {
             if (last_q) {
@@ -597,7 +661,7 @@ app.ticker.add((deltaMS) => {
                 }, 3000);
             }
             if (enemy_sprite[enemy_no].position.x > nvw / 1.8) {
-                enemy_sprite[enemy_no].position.x = enemy_sprite[enemy_no].position.x - 10 * move_x;
+                enemy_sprite[enemy_no].position.x = enemy_sprite[enemy_no].position.x - 10 * enemy_move_x[enemy_no];
 
             } else {
                 player_sprite_final.alpha = 1;
@@ -639,48 +703,70 @@ app.ticker.add((deltaMS) => {
                 }
             }
         } else {
-            enemy_sprite[enemy_no].position.x = enemy_sprite[enemy_no].position.x - 10 * move_x;
+            enemy_sprite[enemy_no].position.x = enemy_sprite[enemy_no].position.x - 10 * enemy_move_x[enemy_no];
         }
-        if (enemy_sprite[enemy_no].position.x < -300) {
+        if (enemy_sprite[enemy_no].position.x < -300 || enemy_sprite[enemy_no].position.y < -100) {
             enemy_no++
-            move_x = 0;
             die_count = 0;
             is_first_run = false;
             player_container.addChild(enemy_sprite[enemy_no]);
             // app.stage.addChild(player_container);
             player_container.interactive = true;
+            die_count_max = 7;
         }
 
         if (ans_done[0]) {
             ans_done[0] = false;
             $('.ans_1').click(function () {
                 if ($(this).attr('val') === "B") {
-                    app.start();
-                    console.log("yes");
-                    gsap.to(enemy_sprite[2], {
-                        pixi: {scale: 1},
-                        duration: 2,
-                        repeat: 1,
-                        motionPath: {
-                            path: [{x:100, y:50}, {x:200, y:0}, {x:300, y:100}]
-                        },
-                        ease: "power3.in",
-                        onComplete: function () {
-                        },
-                        onUpdate: function () {
-                        }
-                    });
+                    die_count_max = 7777;
                     // gsap.to(enemy_sprite[2], {
                     //     pixi: {scale: 1},
                     //     duration: 1,
-                    //     motionPath: [{x:0, y:0}, {x:8888, y:500}],
                     //     repeat: 1,
+                    //     motionPath: {
+                    //         path: [{x:100, y:50}, {x:nvw*2, y:nvh*2} ]
+                    //     },
+                    //     ease: "power3.in",
                     //     onComplete: function () {
-                    //         $('.q1').fadeOut(function () {
-                    //             question_index.splice(question_index.indexOf(2), 1);
-                    //             app.start();
-                    //             $('.q1').remove();
-                    //         });
+                    //         app.start();
+                    //     },
+                    //     onUpdate: function () {
+                    //          $('.q1').remove();
+                    //     }
+                    // });
+                    // enemy_sprite[2].anchor.set(0.5,0.5 );
+                    // app.start();
+                    // enemy_out[0] = true;
+                    // $('.q1').fadeOut(function () {
+                    //     question_index.splice(question_index.indexOf(2), 1);
+                    //
+                    //     $('.q1').remove();
+                    // });
+
+                    $('.q1').fadeOut(function () {
+                        question_index.splice(question_index.indexOf(2), 1);
+                        app.start();
+                        $('.q1').remove();
+                        enemy_out[0] = true;
+                        jumping = true;
+                    });
+                    // enemy_sprite[2].y = enemy_sprite[2].position.y() +50;
+                    // gsap.to(enemy_sprite[2], {
+                    //     pixi: {scale: 1},
+                    //     duration: 2,
+                    //     rotation:-360,
+                    //     motionPath:{
+                    //         path: [   {x:nvw*2, y:-nvh*2} ]
+                    //     },
+                    //     ease: "power3.in",
+                    //     repeat: 0,
+                    //     onComplete: function () {
+                    //         // $('.q1').fadeOut(function () {
+                    //         //     question_index.splice(question_index.indexOf(2), 1);
+                    //         //     app.start();
+                    //         //     $('.q1').remove();
+                    //         // });
                     //     },
                     //     onUpdate: function () {
                     //     }
@@ -710,21 +796,32 @@ app.ticker.add((deltaMS) => {
             ans_done[1] = false;
             $('.ans_2').click(function () {
                 if ($(this).attr('val') === "A") {
+                    die_count_max = 7777;
+                    enemy_out[1] = true;
+                    out_x = 0;
+                    out_y = 0;
+
                     console.log("yes");
-                    gsap.to(enemy_sprite[4], {
-                        pixi: {scale: 0},
-                        duration: 0,
-                        repeat: 1,
-                        onComplete: function () {
-                            $('.q2').fadeOut(function () {
-                                question_index.splice(question_index.indexOf(4), 1);
-                                app.start();
-                                $('.q2').remove();
-                            });
-                        },
-                        onUpdate: function () {
-                        }
+                    $('.q2').fadeOut(function () {
+                        question_index.splice(question_index.indexOf(4), 1);
+                        app.start();
+                        $('.q2').remove();
+                        jumping = true;
                     });
+                    // gsap.to(enemy_sprite[4], {
+                    //     pixi: {scale: 0},
+                    //     duration: 0,
+                    //     repeat: 1,
+                    //     onComplete: function () {
+                    //         $('.q2').fadeOut(function () {
+                    //             question_index.splice(question_index.indexOf(4), 1);
+                    //             app.start();
+                    //             $('.q2').remove();
+                    //         });
+                    //     },
+                    //     onUpdate: function () {
+                    //     }
+                    // });
                 } else {
                     $('.q2').hide();
                     $('.error_message').fadeIn();
@@ -748,21 +845,32 @@ app.ticker.add((deltaMS) => {
             ans_done[2] = false;
             $('.ans_3').click(function () {
                 if ($(this).attr('val') === "A") {
+                    die_count_max = 7777;
                     console.log("yes");
-                    gsap.to(enemy_sprite[7], {
-                        pixi: {scale: 0},
-                        duration: 0,
-                        repeat: 1,
-                        onComplete: function () {
-                            $('.q3').fadeOut(function () {
-                                question_index.splice(question_index.indexOf(7), 1);
-                                app.start();
-                                $('.q3').remove();
-                            });
-                        },
-                        onUpdate: function () {
-                        }
+                    enemy_out[2] = true;
+                    out_x = 0;
+                    out_y = 0;
+                    console.log("yes");
+                    $('.q3').fadeOut(function () {
+                        question_index.splice(question_index.indexOf(7), 1);
+                        app.start();
+                        $('.q3').remove();
+                        jumping = true;
                     });
+                    // gsap.to(enemy_sprite[7], {
+                    //     pixi: {scale: 0},
+                    //     duration: 0,
+                    //     repeat: 1,
+                    //     onComplete: function () {
+                    //         $('.q3').fadeOut(function () {
+                    //             question_index.splice(question_index.indexOf(7), 1);
+                    //             app.start();
+                    //             $('.q3').remove();
+                    //         });
+                    //     },
+                    //     onUpdate: function () {
+                    //     }
+                    // });
                 } else {
                     $('.q3').hide();
                     $('.error_message').fadeIn();
@@ -786,21 +894,33 @@ app.ticker.add((deltaMS) => {
             ans_done[3] = false;
             $('.ans_4').click(function () {
                 if ($(this).attr('val') === "A") {
+                    die_count_max = 7777;
                     console.log("yes");
-                    gsap.to(enemy_sprite[9], {
-                        pixi: {scale: 0},
-                        duration: 0,
-                        repeat: 1,
-                        onComplete: function () {
-                            $('.q4').fadeOut(function () {
-                                question_index.splice(question_index.indexOf(9), 1);
-                                app.start();
-                                $('.q4').remove();
-                            });
-                        },
-                        onUpdate: function () {
-                        }
+                    console.log("yes");
+                    enemy_out[3] = true;
+                    out_x = 0;
+                    out_y = 0;
+                    console.log("yes");
+                    $('.q4').fadeOut(function () {
+                        question_index.splice(question_index.indexOf(9), 1);
+                        app.start();
+                        $('.q4').remove();
+                        jumping = true;
                     });
+                    // gsap.to(enemy_sprite[9], {
+                    //     pixi: {scale: 0},
+                    //     duration: 0,
+                    //     repeat: 1,
+                    //     onComplete: function () {
+                    //         $('.q4').fadeOut(function () {
+                    //             question_index.splice(question_index.indexOf(9), 1);
+                    //             app.start();
+                    //             $('.q4').remove();
+                    //         });
+                    //     },
+                    //     onUpdate: function () {
+                    //     }
+                    // });
                 } else {
                     $('.q4').hide();
                     $('.error_message').fadeIn();
@@ -823,31 +943,44 @@ app.ticker.add((deltaMS) => {
             ans_done[4] = false;
             $('.ans_5').click(function () {
                 if ($(this).attr('val') === "A") {
+                    die_count_max = 7777;
                     console.log("yes");
+                    enemy_out[4] = true;
+                    out_x = 0;
+                    out_y = 0;
 
-
-                    enemy_sprite[11].texture = textureArray.bose_lose;
-
-                    gsap.to(enemy_sprite[11], {
-                        pixi: {scale: 1},
-                        duration: 0,
-                        repeat: 1,
-                        onComplete: function () {
-                            $('.q5').fadeOut(function () {
-                                question_index.splice(question_index.indexOf(11), 1);
-                                kill_boss = true;
-                                app.start();
-                                setTimeout(function (){
-                                    location.href = 'contact.html';
-                                },2500);
-                            });
-                        },
-                        onUpdate: function () {
-                            enemy_no = 12;
-                            player_sprite_final.alpha = 0;
-                            jumping = true;
-                        }
+                    kill_boss = true;
+                    $('.q5').fadeOut(function () {
+                        $('.q5').remove();
+                        jumping = true;
+                        enemy_no = 12;
+                        player_sprite_final.alpha = 0;
+                        question_index.splice(question_index.indexOf(11), 1);
+                        app.start();
+                        setTimeout(function () {
+                            location.href = 'contact.html';
+                        }, 12500);
                     });
+                    // gsap.to(enemy_sprite[11], {
+                    //     pixi: {scale: 1},
+                    //     duration: 0,
+                    //     repeat: 1,
+                    //     onComplete: function () {
+                    //         $('.q5').fadeOut(function () {
+                    //             question_index.splice(question_index.indexOf(11), 1);
+                    //             kill_boss = true;
+                    //             app.start();
+                    //             setTimeout(function (){
+                    //                 location.href = 'contact.html';
+                    //             },2500);
+                    //         });
+                    //     },
+                    //     onUpdate: function () {
+                    //         enemy_no = 12;
+                    //         player_sprite_final.alpha = 0;
+                    //         jumping = true;
+                    //     }
+                    // });
                 } else {
                     $('.q5').hide();
                     $('.error_message').fadeIn();
